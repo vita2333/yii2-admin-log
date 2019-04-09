@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist vita2333/yii2-admin-log "*"
+php composer.phar require --prefer-dist vita2333/yii2-admin-log "^1.0.0"
 ```
 
 or add
 
 ```
-"vita2333/yii2-admin-log": "*"
+"vita2333/yii2-admin-log": "^1.0.0"
 ```
 
 to the require section of your `composer.json` file.

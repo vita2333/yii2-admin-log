@@ -1,6 +1,6 @@
 {
   "name": "vita2333/yii2-admin-log",
-  "description": "yii2 admin log extention",
+  "description": "yii2 admin log extension",
   "type": "yii2-extension",
   "keywords": [
     "yii2",
@@ -20,5 +20,6 @@
     "psr-4": {
       "AdminLog\\": ""
     }
-  }
+  },
+  "minimum-stability": "dev"
 }
