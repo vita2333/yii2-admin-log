@@ -13,7 +13,6 @@ use yii\base\Behavior;
 use yii\base\Event;
 use yii\base\Module;
 use yii\db\ActiveRecord;
-use yii\db\AfterSaveEvent;
 use yii\db\BaseActiveRecord;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
@@ -101,7 +100,7 @@ class AdminLogBehavior extends Behavior
         return $id;
     }
 
-    public function afterModelChanged(AfterSaveEvent $event)
+    public function afterModelChanged($event)
     {
         /** @var ActiveRecord $sender */
         $sender = $event->sender;
