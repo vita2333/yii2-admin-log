@@ -11,6 +11,7 @@ use Yii;
 use yii\base\Action;
 use yii\base\Behavior;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
 use yii\base\Module;
 use yii\db\ActiveRecord;
 use yii\db\BaseActiveRecord;
@@ -107,6 +108,7 @@ class AdminLogBehavior extends Behavior
         if ($sender instanceof AdminLog) {
             return true;
         }
+
         if ($event->name === ActiveRecord::EVENT_AFTER_INSERT) {
             $type = EnumLogType::TYPE_INSERT;
         } elseif ($event->name === ActiveRecord::EVENT_AFTER_UPDATE) {
@@ -115,14 +117,14 @@ class AdminLogBehavior extends Behavior
             $type = EnumLogType::TYPE_INSERT;
         }
 
-        /** @var \AdminLog\IdentityInterface $user */
-        $user      = Yii::$app->user->getIdentity();
+        $info = $this->getUserInfo();
+
         $tableName = $sender::tableName();
         $tableName = str_replace(['{{%', '}}'], '', $tableName);
 
         $log = new AdminLog([
-            'user_id'    => $user->getId(),
-            'username'   => $user->getUsername(),
+            'user_id'    => $info[0],
+            'username'   => $info[1],
             'type'       => $type,
             'table_name' => $tableName,
             'route'      => Url::to(),
@@ -137,6 +139,25 @@ class AdminLogBehavior extends Behavior
         $log->save();
 
         return $log;
+    }
+
+    protected function getUserInfo()
+    {
+        if (Yii::$app->has('user')) {
+            /** @var \yii\web\User $user */
+            $user = Yii::$app->get('user');
+            /** @var \AdminLog\IdentityInterface $identity */
+            if ($identity = $user->getIdentity()) {
+                $uid   = $identity->getId();
+                $uname = $identity->getUsername();
+            } else {
+                $uid   = '0';
+                $uname = '游客';
+            }
+
+            return [$uid, $uname];
+        }
+        throw new InvalidConfigException('user 模块未配置');
     }
 
     protected function getChangedAttrDesc($event)
